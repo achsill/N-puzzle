@@ -22,8 +22,6 @@ def getPosition(matrix, value):
             if item2 == value:
                 return [index, index2];
 
-
-
 def calculManathanDistance(matrix, finalMatrix, limit):
     i = 1;
     k, result = (0,) *2;
@@ -31,51 +29,63 @@ def calculManathanDistance(matrix, finalMatrix, limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
         result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
+        # print "\negal = ", i, j, h, result
         i+=1;
     return result;
 
 def getZeroPos(matrix):
     return getPosition(matrix, 0);
 
-# def moveRight(matrix):
-
-def manathanDistance(matrix, finalMatrix, limit):
+def calculH(matrix, finalMatrix, limit):
     zeroPos = getZeroPos(matrix);
     tmpMatrix = deepcopy(matrix);
     squareLimit = sqrt(limit);
+    listNextNodes = [];
     if (zeroPos[1] + 1 < squareLimit):
-        matrix[zeroPos[0]][zeroPos[1]], matrix[zeroPos[0]][zeroPos[1] + 1] = matrix[zeroPos[0]][zeroPos[1] + 1], matrix[zeroPos[0]][zeroPos[1]]
-        matrix = deepcopy(tmpMatrix);
-        print "right = ", calculManathanDistance(matrix, finalMatrix, limit);
+        tmpMatrix[zeroPos[0]][zeroPos[1]], tmpMatrix[zeroPos[0]][zeroPos[1] + 1] = tmpMatrix[zeroPos[0]][zeroPos[1] + 1], tmpMatrix[zeroPos[0]][zeroPos[1]]
+        # print "right = ", calculManathanDistance(tmpMatrix, finalMatrix, limit);
+        listNextNodes.append(tmpMatrix);
+        tmpMatrix = deepcopy(matrix);
     if (zeroPos[1] - 1 >= 0):
-        matrix[zeroPos[0]][zeroPos[1] - 1], matrix[zeroPos[0]][zeroPos[1]] = matrix[zeroPos[0]][zeroPos[1]], matrix[zeroPos[0]][zeroPos[1] - 1]
-        print "left = ", calculManathanDistance(matrix, finalMatrix, limit);
+        tmpMatrix[zeroPos[0]][zeroPos[1] - 1], tmpMatrix[zeroPos[0]][zeroPos[1]] = tmpMatrix[zeroPos[0]][zeroPos[1]], tmpMatrix[zeroPos[0]][zeroPos[1] - 1]
+        # print "left = ", calculManathanDistance(tmpMatrix, finalMatrix, limit);
+        listNextNodes.append(tmpMatrix);
+        tmpMatrix = deepcopy(matrix);
     if (zeroPos[0] + 1 < squareLimit):
-        matrix[zeroPos[0]][zeroPos[1]], matrix[zeroPos[0] + 1][zeroPos[1]] = matrix[zeroPos[0] + 1][zeroPos[1]], matrix[zeroPos[0]][zeroPos[1]]
-        print "top = ", calculManathanDistance(matrix, finalMatrix, limit);
+        tmpMatrix[zeroPos[0]][zeroPos[1]], tmpMatrix[zeroPos[0] + 1][zeroPos[1]] = tmpMatrix[zeroPos[0] + 1][zeroPos[1]], tmpMatrix[zeroPos[0]][zeroPos[1]]
+        # print "bot = ", calculManathanDistance(tmpMatrix, finalMatrix, limit);
+        listNextNodes.append(tmpMatrix);
+        tmpMatrix = deepcopy(matrix);
     if (zeroPos[0] - 1 >= 0):
-        matrix[zeroPos[0] -1][zeroPos[1]], matrix[zeroPos[0]][zeroPos[1]] = matrix[zeroPos[0]][zeroPos[1]], matrix[zeroPos[0] -1][zeroPos[1]];
-        print "bot = ", calculManathanDistance(matrix, finalMatrix, limit);
-# def changePos(grid):
-#     for index, item in enumerate(grid):
-#         for index2, item2 in enumerate(item):
-#             if (item2 == 0):
-#                 item[index2], item[index2 + 1] = item[index2 + 1], item[index2]
-#                 return grid;
-#     return grid;
+        tmpMatrix[zeroPos[0] -1][zeroPos[1]], tmpMatrix[zeroPos[0]][zeroPos[1]] = tmpMatrix[zeroPos[0]][zeroPos[1]], tmpMatrix[zeroPos[0] -1][zeroPos[1]];
+        # print "top = ", calculManathanDistance(tmpMatrix, finalMatrix, limit);
+        listNextNodes.append(tmpMatrix);
+        tmpMatrix = deepcopy(matrix);
+    return listNextNodes;
+def manathanDistance(matrix, finalMatrix, limit):
+    openList = []
+    # openList.append(node(0, calculManathanDistance(matrix, finalMatrix, limit, None), matrix));
+    # i = 0;
+    # print "skerg";
+    # while (len(openList) > 0):
+    #     if openList[i].matrix == finalMatrix:
+    #         print "DONE";
+    #
+    #     listNodes = calculH(matrix, finalMatrix, limit,);
+    #     print "skerg";
+    #     i+=1;
+
+
 
 class node:
-    def __init__(self, g, h):
+    def __init__(self, g, h, matrix, parent):
         self.g = g;
         self.h = h;
         self.f = g + h;
-    def get_f():
-        return self.f;
+        self.matrix = matrix;
+        self.parent = parent;
 
 matrix = restructureList();
 nbrOfValue = len(matrix) * len(matrix);
 finalMatrix = finalStateMatrix(matrix);
-print matrix;
-print finalMatrix;
 manathanDistance(matrix, finalMatrix, nbrOfValue)
-print matrix;
