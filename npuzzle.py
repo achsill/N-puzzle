@@ -1,4 +1,7 @@
 import sys
+from spiral_array import finalStateMatrix
+from copy import copy, deepcopy
+from math import sqrt;
 
 def readFile():
     with open(sys.argv[1]) as f:
@@ -12,33 +15,54 @@ def restructureList():
          newList.append([int(n) for n in x.split()]);
     return newList;
 
-def manathanDistance(grid):
-    i = 0;
-    for index, item in enumerate(grid):
+def getPosition(matrix, value):
+    for index, item in enumerate(matrix):
         newLen = len(item);
         for index2, item2 in enumerate(item):
-            if ((item2 != 0) and ((index2 + 1) + (newLen * index)) != item2):
-                # print (str(index2 + 1) + '+' + str(newLen) + '*' + str(index)) + " = " + str(item2);
-                i+= 1;
-            # print(index2, item2)
-        # print(index, item)
-    return i;
+            if item2 == value:
+                return [index, index2];
 
-# def replaceGrid(grid):
+
+
+def calculManathanDistance(matrix, finalMatrix, limit):
+    i = 1;
+    k, result = (0,) *2;
+    while (i < limit):
+        j = getPosition(matrix, i);
+        h = getPosition(finalMatrix, i);
+        result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
+        i+=1;
+    return result;
+
+def getZeroPos(matrix):
+    return getPosition(matrix, 0);
+
+# def moveRight(matrix):
+
+def manathanDistance(matrix, finalMatrix, limit):
+    zeroPos = getZeroPos(matrix);
+    tmpMatrix = deepcopy(matrix);
+    squareLimit = sqrt(limit);
+    if (zeroPos[1] + 1 < squareLimit):
+        matrix[zeroPos[0]][zeroPos[1]], matrix[zeroPos[0]][zeroPos[1] + 1] = matrix[zeroPos[0]][zeroPos[1] + 1], matrix[zeroPos[0]][zeroPos[1]]
+        matrix = deepcopy(tmpMatrix);
+        print "right = ", calculManathanDistance(matrix, finalMatrix, limit);
+    if (zeroPos[1] - 1 >= 0):
+        matrix[zeroPos[0]][zeroPos[1] - 1], matrix[zeroPos[0]][zeroPos[1]] = matrix[zeroPos[0]][zeroPos[1]], matrix[zeroPos[0]][zeroPos[1] - 1]
+        print "left = ", calculManathanDistance(matrix, finalMatrix, limit);
+    if (zeroPos[0] + 1 < squareLimit):
+        matrix[zeroPos[0]][zeroPos[1]], matrix[zeroPos[0] + 1][zeroPos[1]] = matrix[zeroPos[0] + 1][zeroPos[1]], matrix[zeroPos[0]][zeroPos[1]]
+        print "top = ", calculManathanDistance(matrix, finalMatrix, limit);
+    if (zeroPos[0] - 1 >= 0):
+        matrix[zeroPos[0] -1][zeroPos[1]], matrix[zeroPos[0]][zeroPos[1]] = matrix[zeroPos[0]][zeroPos[1]], matrix[zeroPos[0] -1][zeroPos[1]];
+        print "bot = ", calculManathanDistance(matrix, finalMatrix, limit);
+# def changePos(grid):
 #     for index, item in enumerate(grid):
-#         newLen = len(item);
 #         for index2, item2 in enumerate(item):
 #             if (item2 == 0):
-
-
-
-def changePos(grid):
-    for index, item in enumerate(grid):
-        for index2, item2 in enumerate(item):
-            if (item2 == 0):
-                item[index2], item[index2 + 1] = item[index2 + 1], item[index2]
-                return grid;
-    return grid;
+#                 item[index2], item[index2 + 1] = item[index2 + 1], item[index2]
+#                 return grid;
+#     return grid;
 
 class node:
     def __init__(self, g, h):
@@ -48,11 +72,10 @@ class node:
     def get_f():
         return self.f;
 
-newList = restructureList();
-print newList;
-x = manathanDistance(newList);
-newGrid = changePos(newList);
-print newGrid;
-y = manathanDistance(newGrid);
-print x;
-print y;
+matrix = restructureList();
+nbrOfValue = len(matrix) * len(matrix);
+finalMatrix = finalStateMatrix(matrix);
+print matrix;
+print finalMatrix;
+manathanDistance(matrix, finalMatrix, nbrOfValue)
+print matrix;
