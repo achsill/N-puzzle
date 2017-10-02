@@ -1,5 +1,6 @@
 import sys
 from spiral_array import finalStateMatrix
+from check_if_solvable import checkTheMatrix
 from copy import copy, deepcopy
 from math import sqrt;
 
@@ -90,10 +91,14 @@ def alreadyInOpenList(parent, openList, matrix, i, limit):
 
 
 def allPath(matrix):
+    resultList = [];
     while matrix.parent is not None:
-        print matrix.matrix;
+        resultList.append(matrix.matrix);
         matrix = matrix.parent;
-
+    for i in reversed(resultList):
+        for array in i:
+            print array;
+        print '\n';
 def manathanDistance(matrix, finalMatrix, limit):
     closedList = [];
     openList = [];
@@ -114,15 +119,6 @@ def manathanDistance(matrix, finalMatrix, limit):
             else:
                 alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit);
     print "this N-puzzle is not solvable";
-    # i = 0;
-    # print "skerg";
-    # while (len(openList) > 0):
-    #     if openList[i].matrix == finalMatrix:
-    #         print "DONE";
-    #
-    #     listNodes = calculH(matrix, finalMatrix, limit,);
-    #     print "skerg";
-    #     i+=1;
 
 
 
@@ -137,4 +133,7 @@ class node:
 matrix = restructureList();
 nbrOfValue = len(matrix) * len(matrix);
 finalMatrix = finalStateMatrix(matrix);
+if checkTheMatrix(matrix, finalMatrix) == -1:
+    print "this N-puzzle is not solvable";
+    exit(0);
 manathanDistance(matrix, finalMatrix, nbrOfValue)
