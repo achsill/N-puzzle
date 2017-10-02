@@ -72,29 +72,48 @@ def lowestFscore(matrixList):
             lowest = matrix;
     return lowest;
 
+def matrixInList(matrixList, matrix):
+    for m in matrixList:
+        if (m.matrix == matrix):
+            return 1;
+    return 0;
+
+def alreadyInOpenList(parent, openList, matrix, i, limit):
+    for m in openList:
+        if (m.matrix == matrix):
+            h = calculManathanDistance(matrix, finalMatrix, limit);
+            if (i + h < m.f):
+                m.h = h;
+                m.g = i;
+                m.parent = parent;
+                return ;
+
+
+def allPath(matrix):
+    while matrix.parent is not None:
+        print matrix.matrix;
+        matrix = matrix.parent;
 
 def manathanDistance(matrix, finalMatrix, limit):
     closedList = [];
     openList = [];
-    i = 0;
     openList.append(node(0, calculManathanDistance(matrix, finalMatrix, limit), matrix, None));
     while (openList is not None):
         currentMatrix = lowestFscore(openList);
         closedList.append(currentMatrix);
         openList.remove(currentMatrix);
-        print currentMatrix.matrix;
         if (currentMatrix.matrix == finalMatrix):
-            break ;
+            allPath(currentMatrix);
+            return ;
         adjacentMatrix = calculH(currentMatrix.matrix, finalMatrix, limit);
         for aMatrix in adjacentMatrix:
-            if aMatrix in closedList:
+            if matrixInList(closedList, aMatrix) == 1:
                 continue;
-                print "pullupSkurk";
-            if aMatrix not in openList:
-                openList.append(node(i, calculManathanDistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix.matrix));
+            if matrixInList(openList, aMatrix) == 0:
+                openList.append(node(currentMatrix.g + 1, calculManathanDistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix));
             else:
-                print "skurt";
-        i+=1;
+                alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit);
+    print "this N-puzzle is not solvable";
     # i = 0;
     # print "skerg";
     # while (len(openList) > 0):
