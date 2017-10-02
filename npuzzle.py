@@ -30,7 +30,6 @@ def calculManathanDistance(matrix, finalMatrix, limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
         result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
-        # print "\negal = ", i, j, h, result
         i+=1;
     return result;
 
@@ -44,22 +43,18 @@ def calculH(matrix, finalMatrix, limit):
     listNextNodes = [];
     if (zeroPos[1] + 1 < squareLimit):
         tmpMatrix[zeroPos[0]][zeroPos[1]], tmpMatrix[zeroPos[0]][zeroPos[1] + 1] = tmpMatrix[zeroPos[0]][zeroPos[1] + 1], tmpMatrix[zeroPos[0]][zeroPos[1]]
-        # print "right = ", calculManathanDistance(tmpMatrix, finalMatrix, limit);
         listNextNodes.append(tmpMatrix);
         tmpMatrix = deepcopy(matrix);
     if (zeroPos[1] - 1 >= 0):
         tmpMatrix[zeroPos[0]][zeroPos[1] - 1], tmpMatrix[zeroPos[0]][zeroPos[1]] = tmpMatrix[zeroPos[0]][zeroPos[1]], tmpMatrix[zeroPos[0]][zeroPos[1] - 1]
-        # print "left = ", calculManathanDistance(tmpMatrix, finalMatrix, limit);
         listNextNodes.append(tmpMatrix);
         tmpMatrix = deepcopy(matrix);
     if (zeroPos[0] + 1 < squareLimit):
         tmpMatrix[zeroPos[0]][zeroPos[1]], tmpMatrix[zeroPos[0] + 1][zeroPos[1]] = tmpMatrix[zeroPos[0] + 1][zeroPos[1]], tmpMatrix[zeroPos[0]][zeroPos[1]]
-        # print "bot = ", calculManathanDistance(tmpMatrix, finalMatrix, limit);
         listNextNodes.append(tmpMatrix);
         tmpMatrix = deepcopy(matrix);
     if (zeroPos[0] - 1 >= 0):
         tmpMatrix[zeroPos[0] -1][zeroPos[1]], tmpMatrix[zeroPos[0]][zeroPos[1]] = tmpMatrix[zeroPos[0]][zeroPos[1]], tmpMatrix[zeroPos[0] -1][zeroPos[1]];
-        # print "top = ", calculManathanDistance(tmpMatrix, finalMatrix, limit);
         listNextNodes.append(tmpMatrix);
         tmpMatrix = deepcopy(matrix);
     return listNextNodes;
@@ -99,9 +94,11 @@ def allPath(matrix):
         for array in i:
             print array;
         print '\n';
+    print "The program needed " + str(len(resultList)) + " moves to find the solution."
 def manathanDistance(matrix, finalMatrix, limit):
     closedList = [];
     openList = [];
+    matrixInOpen = 1;
     openList.append(node(0, calculManathanDistance(matrix, finalMatrix, limit), matrix, None));
     while (openList is not None):
         currentMatrix = lowestFscore(openList);
@@ -109,6 +106,7 @@ def manathanDistance(matrix, finalMatrix, limit):
         openList.remove(currentMatrix);
         if (currentMatrix.matrix == finalMatrix):
             allPath(currentMatrix);
+            print "Number of states been in the open list: " + str(matrixInOpen) + ".";
             return ;
         adjacentMatrix = calculH(currentMatrix.matrix, finalMatrix, limit);
         for aMatrix in adjacentMatrix:
@@ -116,9 +114,9 @@ def manathanDistance(matrix, finalMatrix, limit):
                 continue;
             if matrixInList(openList, aMatrix) == 0:
                 openList.append(node(currentMatrix.g + 1, calculManathanDistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix));
+                matrixInOpen+=1;
             else:
                 alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit);
-    print "this N-puzzle is not solvable";
 
 
 
