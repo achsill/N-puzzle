@@ -36,7 +36,7 @@ def calculManathanDistance(matrix, finalMatrix, limit):
 def getZeroPos(matrix):
     return getPosition(matrix, 0);
 
-def calculH(matrix, finalMatrix, limit):
+def manathanDistance(matrix, finalMatrix, limit):
     zeroPos = getZeroPos(matrix);
     tmpMatrix = deepcopy(matrix);
     squareLimit = sqrt(limit);
@@ -95,7 +95,7 @@ def allPath(matrix):
             print array;
         print '\n';
     print "The program needed " + str(len(resultList)) + " moves to find the solution."
-def manathanDistance(matrix, finalMatrix, limit):
+def aStar(matrix, finalMatrix, limit):
     closedList = [];
     openList = [];
     matrixInOpen = 1;
@@ -108,7 +108,8 @@ def manathanDistance(matrix, finalMatrix, limit):
             allPath(currentMatrix);
             print "Number of states been in the open list: " + str(matrixInOpen) + ".";
             return ;
-        adjacentMatrix = calculH(currentMatrix.matrix, finalMatrix, limit);
+        adjacentMatrix = manathanDistance(currentMatrix.matrix, finalMatrix, limit);
+        print len(adjacentMatrix);
         for aMatrix in adjacentMatrix:
             if matrixInList(closedList, aMatrix) == 1:
                 continue;
@@ -134,4 +135,4 @@ finalMatrix = finalStateMatrix(matrix);
 if checkTheMatrix(matrix, finalMatrix) == -1:
     print "this N-puzzle is not solvable";
     exit(0);
-manathanDistance(matrix, finalMatrix, nbrOfValue)
+aStar(matrix, finalMatrix, nbrOfValue)
