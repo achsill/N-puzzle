@@ -62,9 +62,39 @@ def calculH(matrix, finalMatrix, limit):
         listNextNodes.append(tmpMatrix);
         tmpMatrix = deepcopy(matrix);
     return listNextNodes;
+
+def lowestFscore(matrixList):
+    lowest = None;
+    for matrix in matrixList:
+        if (lowest is None):
+            lowest = matrix;
+        if (matrix.f < lowest.f):
+            lowest = matrix;
+    return lowest;
+
+
 def manathanDistance(matrix, finalMatrix, limit):
-    openList = []
-    # openList.append(node(0, calculManathanDistance(matrix, finalMatrix, limit, None), matrix));
+    closedList = [];
+    openList = [];
+    i = 0;
+    openList.append(node(0, calculManathanDistance(matrix, finalMatrix, limit), matrix, None));
+    while (openList is not None):
+        currentMatrix = lowestFscore(openList);
+        closedList.append(currentMatrix);
+        openList.remove(currentMatrix);
+        print currentMatrix.matrix;
+        if (currentMatrix.matrix == finalMatrix):
+            break ;
+        adjacentMatrix = calculH(currentMatrix.matrix, finalMatrix, limit);
+        for aMatrix in adjacentMatrix:
+            if aMatrix in closedList:
+                continue;
+                print "pullupSkurk";
+            if aMatrix not in openList:
+                openList.append(node(i, calculManathanDistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix.matrix));
+            else:
+                print "skurt";
+        i+=1;
     # i = 0;
     # print "skerg";
     # while (len(openList) > 0):
