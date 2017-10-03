@@ -12,8 +12,9 @@ def readFile():
 def restructureList():
     fileContent = readFile();
     newList = [];
-    for x in fileContent:
-         newList.append([int(n) for n in x.split()]);
+    for i, x in enumerate(fileContent):
+        if i > 1:
+            newList.append([int(n) for n in x.split()]);
     return newList;
 
 def getPosition(matrix, value):
@@ -23,9 +24,23 @@ def getPosition(matrix, value):
             if item2 == value:
                 return [index, index2];
 
+def calculMisplacedTiles(matrix, finalMatrix, limit):
+    i = 1;
+    k = 0;
+    k, result = (0,) *2;
+    while (i < limit):
+        j = getPosition(matrix, i);
+        h = getPosition(finalMatrix, i);
+        if j != h:
+            k+=1;
+        i+=1;
+    return result;
+
+# def calculNilssonSequence(matrix, finalMatrix, limit):
+
 def calculManathanDistance(matrix, finalMatrix, limit):
     i = 1;
-    k, result = (0,) *2;
+    result = 0;
     while (i < limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
@@ -33,10 +48,34 @@ def calculManathanDistance(matrix, finalMatrix, limit):
         i+=1;
     return result;
 
+# Manathan + Linear distance.
+def calculMandLdistance(matrix, finalMatrix, limit):
+    result = 0;
+    linearConf = 0;
+    i = 1;
+    while (i < limit):
+        j = getPosition(matrix, i);
+        h = getPosition(finalMatrix, i);
+        if (abs(j[0] - h[0]) + abs(j[1] - h[1]) != 0):
+                if (j[1] + 1) * (j[1] + 1) < limit - 1  and matrix[j[0]][j[1] + 1] == matrix[h[0]][h[1]] and matrix[j[0]][j[1]] == matrix[h[0]][h[1] - 1]:
+                    print "____la____"
+                    print matrix
+                    print "_________"
+                    linearConf+=1;
+                # elif (j[0] + 1) * (j[0] + 1) < limit - 1  and matrix[j[0] + 1][j[1]] == matrix[h[0]][h[1]]:
+                #     print "____ici____"
+                #     print matrix, finalMatrix;
+                #     print "_________"
+                #     linearConf+=1;
+        result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
+        i+=1;
+    return result + linearConf * 2;
+
+
 def getZeroPos(matrix):
     return getPosition(matrix, 0);
 
-def manathanDistance(matrix, finalMatrix, limit):
+def calculAdjacent(matrix, finalMatrix, limit):
     zeroPos = getZeroPos(matrix);
     tmpMatrix = deepcopy(matrix);
     squareLimit = sqrt(limit);
@@ -77,7 +116,7 @@ def matrixInList(matrixList, matrix):
 def alreadyInOpenList(parent, openList, matrix, i, limit):
     for m in openList:
         if (m.matrix == matrix):
-            h = calculManathanDistance(matrix, finalMatrix, limit);
+            h = calculMandLdistance(matrix, finalMatrix, limit);
             if (i + h < m.f):
                 m.h = h;
                 m.g = i;
@@ -99,7 +138,7 @@ def aStar(matrix, finalMatrix, limit):
     closedList = [];
     openList = [];
     matrixInOpen = 1;
-    openList.append(node(0, calculManathanDistance(matrix, finalMatrix, limit), matrix, None));
+    openList.append(node(0, calculMandLdistance(matrix, finalMatrix, limit), matrix, None));
     while (openList is not None):
         currentMatrix = lowestFscore(openList);
         closedList.append(currentMatrix);
@@ -108,13 +147,12 @@ def aStar(matrix, finalMatrix, limit):
             allPath(currentMatrix);
             print "Number of states been in the open list: " + str(matrixInOpen) + ".";
             return ;
-        adjacentMatrix = manathanDistance(currentMatrix.matrix, finalMatrix, limit);
-        print len(adjacentMatrix);
+        adjacentMatrix = calculAdjacent(currentMatrix.matrix, finalMatrix, limit);
         for aMatrix in adjacentMatrix:
             if matrixInList(closedList, aMatrix) == 1:
                 continue;
             if matrixInList(openList, aMatrix) == 0:
-                openList.append(node(currentMatrix.g + 1, calculManathanDistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix));
+                openList.append(node(currentMatrix.g + 1, calculMandLdistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix));
                 matrixInOpen+=1;
             else:
                 alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit);
