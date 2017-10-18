@@ -1,6 +1,0 @@
-Copyright (c) 2017
- Copyright Holder All Rights Reserved.
-1 2 4 3
-12 13 14 6
-11 0 15 5
-10 9 8 7

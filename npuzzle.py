@@ -56,18 +56,12 @@ def calculMandLdistance(matrix, finalMatrix, limit):
     while (i < limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
+        if matrix[h[0]][h[1] - 1] == finalMatrix[h[0]][h[1]] and matrix[h[0]][h[1]] == finalMatrix[h[0]][h[1] - 1]:
+            linearConf+=1;
+        if matrix[h[0] - 1][h[1]] == finalMatrix[h[0]][h[1]] and matrix[h[0]][h[1]] == finalMatrix[h[0] - 1][h[1]]:
+            linearConf+=1;
         if (abs(j[0] - h[0]) + abs(j[1] - h[1]) != 0):
-                if (j[1] + 1) * (j[1] + 1) < limit - 1  and matrix[j[0]][j[1] + 1] == matrix[h[0]][h[1]] and matrix[j[0]][j[1]] == matrix[h[0]][h[1] - 1]:
-                    print "____la____"
-                    print matrix
-                    print "_________"
-                    linearConf+=1;
-                # elif (j[0] + 1) * (j[0] + 1) < limit - 1  and matrix[j[0] + 1][j[1]] == matrix[h[0]][h[1]]:
-                #     print "____ici____"
-                #     print matrix, finalMatrix;
-                #     print "_________"
-                #     linearConf+=1;
-        result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
+            result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
         i+=1;
     return result + linearConf * 2;
 
