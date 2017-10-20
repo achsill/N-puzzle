@@ -48,6 +48,70 @@ def calculManathanDistance(matrix, finalMatrix, limit):
         i+=1;
     return result;
 
+def horizontalConf(matrix, finalMatrix, j, h, i, linear, workedList):
+    actualLine = deepcopy(matrix[j[0]]);
+    goalLine = deepcopy(finalMatrix[j[0]]);
+    workingList = [];
+    for x in actualLine:
+        if x in goalLine and x != 0:
+            workingList.append(x);
+    if i in workingList:
+        if j != h:
+            for x in workingList:
+                if x != i:
+                    tmpPos = getPosition(matrix, x);
+                    if h[1] < tmpPos[1] < j[1]:
+                        # print "++";
+                        linear+=1;
+                    elif j[1] < tmpPos[1] < h[1]:
+                        # print "++2";
+                        linear+=1
+    return linear;
+
+def verticalConf(matrix, finalMatrix, j, h, i, linear, workedList):
+    actualLine = [];
+    goalLine = [];
+    d = 0;
+    while d < len(matrix) - 1:
+        actualLine.append(matrix[j[0]][d]);
+        goalLine.append(finalMatrix[j[0]][d]);
+        d+=1;
+    d = 0;
+    print "__";
+    print actualLine;
+    print goalLine;
+    print "__";
+    workingList = [];
+    for x in actualLine:
+        if x in goalLine and x != 0:
+            workingList.append(x);
+    if i in workingList:
+        if j != h:
+            print workingList;
+            # for x in workingList:
+            #     if x != i:
+            #         tmpPos = getPosition(matrix, x);
+            #         if h[1] < tmpPos[1] < j[1]:
+            #             print "++";
+            #             linear+=1;
+            #         elif j[1] < tmpPos[1] < h[1]:
+            #             print "++2";
+            #             linear+=1
+    return linear;
+
+
+def isLinearConflit(matrix, finalMatrix, limit):
+    i = 1;
+    workedList = [];
+    linear = 0;
+    while (i < limit):
+        j = getPosition(matrix, i);
+        h = getPosition(finalMatrix, i);
+        linear = horizontalConf(matrix, finalMatrix, j, h, i, linear, workedList);
+        # linear = verticalConf(matrix, finalMatrix, j, h, i, linear, workedList);
+        i+=1;
+    return linear;
+
 # Manathan + Linear distance.
 def calculMandLdistance(matrix, finalMatrix, limit):
     result = 0;
@@ -56,14 +120,11 @@ def calculMandLdistance(matrix, finalMatrix, limit):
     while (i < limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
-        if matrix[h[0]][h[1] - 1] == finalMatrix[h[0]][h[1]] and matrix[h[0]][h[1]] == finalMatrix[h[0]][h[1] - 1]:
-            linearConf+=1;
-        if matrix[h[0] - 1][h[1]] == finalMatrix[h[0]][h[1]] and matrix[h[0]][h[1]] == finalMatrix[h[0] - 1][h[1]]:
-            linearConf+=1;
+
         if (abs(j[0] - h[0]) + abs(j[1] - h[1]) != 0):
             result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
         i+=1;
-    return result + linearConf * 2;
+    return result + isLinearConflit(matrix, finalMatrix, limit);
 
 
 def getZeroPos(matrix):
@@ -152,7 +213,6 @@ def aStar(matrix, finalMatrix, limit):
                 alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit);
 
 
-
 class node:
     def __init__(self, g, h, matrix, parent):
         self.g = g;
@@ -168,3 +228,5 @@ if checkTheMatrix(matrix, finalMatrix) == -1:
     print "this N-puzzle is not solvable";
     exit(0);
 aStar(matrix, finalMatrix, nbrOfValue)
+# testM = [[0,1,2],[7,0,4],[8,6,5]];
+# calculMandLdistance(matrix,finalMatrix,9);
