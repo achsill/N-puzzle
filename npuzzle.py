@@ -56,14 +56,15 @@ def horizontalConf(matrix, finalMatrix, j, h, i, linear, workedList):
         if x in goalLine and x != 0:
             workingList.append(x);
     if i in workingList:
+        workingList.remove(i);
         if j != h:
             for x in workingList:
-                if x != i:
+                if x in goalLine:
                     tmpPos = getPosition(matrix, x);
-                    if h[1] < tmpPos[1] < j[1]:
+                    if h[1] <= tmpPos[1] <= j[1]:
                         # print "++";
                         linear+=1;
-                    elif j[1] < tmpPos[1] < h[1]:
+                    elif j[1] <= tmpPos[1] <= h[1]:
                         # print "++2";
                         linear+=1
     return linear;
@@ -72,31 +73,34 @@ def verticalConf(matrix, finalMatrix, j, h, i, linear, workedList):
     actualLine = [];
     goalLine = [];
     d = 0;
-    while d < len(matrix) - 1:
-        actualLine.append(matrix[j[0]][d]);
-        goalLine.append(finalMatrix[j[0]][d]);
+    while d < len(matrix):
+        actualLine.append(matrix[d][j[1]]);
+        goalLine.append(finalMatrix[d][j[1]]);
         d+=1;
     d = 0;
-    print "__";
-    print actualLine;
-    print goalLine;
-    print "__";
     workingList = [];
     for x in actualLine:
         if x in goalLine and x != 0:
             workingList.append(x);
     if i in workingList:
+        workingList.remove(i);
         if j != h:
-            print workingList;
-            # for x in workingList:
-            #     if x != i:
-            #         tmpPos = getPosition(matrix, x);
-            #         if h[1] < tmpPos[1] < j[1]:
-            #             print "++";
-            #             linear+=1;
-            #         elif j[1] < tmpPos[1] < h[1]:
-            #             print "++2";
-            #             linear+=1
+            for x in workingList:
+                if x in goalLine:
+                    tmpPos = getPosition(matrix, x);
+                    # print "___";
+                    # print x, i;
+                    # print tmpPos;
+                    # print j;
+                    # print h;
+                    # print "___";
+                    if h[0] <= tmpPos[0] <= j[0]:
+                        # print "++";
+                        linear+=1;
+                    elif j[0] <= tmpPos[0] <= h[0]:
+                        # print "++2";
+                        linear+=1
+    # print i;
     return linear;
 
 
@@ -108,7 +112,7 @@ def isLinearConflit(matrix, finalMatrix, limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
         linear = horizontalConf(matrix, finalMatrix, j, h, i, linear, workedList);
-        # linear = verticalConf(matrix, finalMatrix, j, h, i, linear, workedList);
+        linear = verticalConf(matrix, finalMatrix, j, h, i, linear, workedList);
         i+=1;
     return linear;
 
