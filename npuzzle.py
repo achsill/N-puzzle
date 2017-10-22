@@ -225,6 +225,32 @@ class node:
         self.matrix = matrix;
         self.parent = parent;
 
+
+# def ida(matrix, finalMatrix):
+#     treshold = calculManathanDistance(matrix);
+#     while 1:
+#         tmp = search(matrix, 0, treshold, finalMatrix);
+#         if tmp == 0:
+#             return found;
+#         treshold = tmp;
+#
+# def search(node, g, treshold, goal):
+#     f = g + calculManathanDistance(matrix);
+#     if (f>treshold):
+#         return f;
+#     if noad == goal:
+#         return found;
+#     minimum = f;
+#     adjacentMatrix = calculAdjacent(currentMatrix.matrix, finalMatrix, limit);
+#     for m in adjacentMatrix:
+#         tmp = search(m, g+1, treshold, goal);
+#         if tmp == goal:
+#             return found;
+#         if tmp < minimum:
+#             minmum = tmp;
+#     return minimum;
+
+
 matrix = restructureList();
 nbrOfValue = len(matrix) * len(matrix);
 finalMatrix = finalStateMatrix(matrix);
@@ -232,5 +258,6 @@ if checkTheMatrix(matrix, finalMatrix) == -1:
     print "this N-puzzle is not solvable";
     exit(0);
 aStar(matrix, finalMatrix, nbrOfValue)
+# ida(matrix, finalMatrix);
 # testM = [[0,1,2],[7,0,4],[8,6,5]];
 # calculMandLdistance(matrix,finalMatrix,9);
