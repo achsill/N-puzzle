@@ -2,7 +2,8 @@ import sys
 from spiral_array import finalStateMatrix
 from check_if_solvable import checkTheMatrix
 from copy import copy, deepcopy
-from math import sqrt;
+from math import sqrt
+import math
 
 def readFile():
     with open(sys.argv[1]) as f:
@@ -112,7 +113,7 @@ def isLinearConflit(matrix, finalMatrix, limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
         linear = horizontalConf(matrix, finalMatrix, j, h, i, linear, workedList);
-        linear = verticalConf(matrix, finalMatrix, j, h, i, linear, workedList);
+        linear = linear + verticalConf(matrix, finalMatrix, j, h, i, linear, workedList);
         i+=1;
     return linear;
 
@@ -226,29 +227,34 @@ class node:
         self.parent = parent;
 
 
-# def ida(matrix, finalMatrix):
-#     treshold = calculManathanDistance(matrix);
-#     while 1:
-#         tmp = search(matrix, 0, treshold, finalMatrix);
-#         if tmp == 0:
-#             return found;
-#         treshold = tmp;
-#
-# def search(node, g, treshold, goal):
-#     f = g + calculManathanDistance(matrix);
-#     if (f>treshold):
-#         return f;
-#     if noad == goal:
-#         return found;
-#     minimum = f;
-#     adjacentMatrix = calculAdjacent(currentMatrix.matrix, finalMatrix, limit);
-#     for m in adjacentMatrix:
-#         tmp = search(m, g+1, treshold, goal);
-#         if tmp == goal:
-#             return found;
-#         if tmp < minimum:
-#             minmum = tmp;
-#     return minimum;
+def ida(matrix, finalMatrix, limit):
+    treshold = calculMandLdistance(matrix, finalMatrix, limit);
+    while 1:
+        tmp = search(matrix, 0, treshold, finalMatrix, limit);
+        if tmp.matrix == finalMatrix:
+            print tmp;
+            return ;
+        treshold = tmp.f;
+
+def search(currNode, g, treshold, goal, limit):
+    f = g + calculMandLdistance(matrix, finalMatrix, limit);
+
+    if f > treshold:
+        return f;
+
+    if currNode == goal:
+        print " c en vrai la"
+        return 1;
+    minimum = float("inf");
+    adjacentMatrix = calculAdjacent(currNode, finalMatrix, limit);
+    for m in adjacentMatrix:
+        tmp = search(m, g + 1, treshold, goal, limit);
+        if tmp == 1:
+            print "c la";
+            return 1;
+        if tmp < minimum:
+            minimum = tmp;
+    return minimum;
 
 
 matrix = restructureList();
@@ -258,6 +264,6 @@ if checkTheMatrix(matrix, finalMatrix) == -1:
     print "this N-puzzle is not solvable";
     exit(0);
 aStar(matrix, finalMatrix, nbrOfValue)
-# ida(matrix, finalMatrix);
+# ida(matrix, finalMatrix, nbrOfValue);
 # testM = [[0,1,2],[7,0,4],[8,6,5]];
 # calculMandLdistance(matrix,finalMatrix,9);
