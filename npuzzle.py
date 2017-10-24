@@ -183,6 +183,14 @@ def alreadyInOpenList(parent, openList, matrix, i, limit):
                 m.parent = parent;
                 return ;
 
+def priorityQueue(currList, toAdd):
+    for i, x in enumerate(currList):
+        if x.f > toAdd.f:
+            currList.insert(i, toAdd);
+            return ;
+    currList.append(toAdd);
+
+
 
 def allPath(matrix):
     resultList = [];
@@ -200,7 +208,7 @@ def aStar(matrix, finalMatrix, limit):
     matrixInOpen = 1;
     openList.append(node(0, calculMandLdistance(matrix, finalMatrix, limit), matrix, None));
     while (openList is not None):
-        currentMatrix = lowestFscore(openList);
+        currentMatrix = openList[0];
         closedList.append(currentMatrix);
         openList.remove(currentMatrix);
         if (currentMatrix.matrix == finalMatrix):
@@ -212,7 +220,7 @@ def aStar(matrix, finalMatrix, limit):
             if matrixInList(closedList, aMatrix) == 1:
                 continue;
             if matrixInList(openList, aMatrix) == 0:
-                openList.append(node(currentMatrix.g + 1, calculMandLdistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix));
+                priorityQueue(openList, (node(currentMatrix.g + 1, calculMandLdistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix)));
                 matrixInOpen+=1;
             else:
                 alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit);
