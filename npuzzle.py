@@ -1,136 +1,11 @@
-import sys
 from spiral_array import finalStateMatrix
 from check_if_solvable import checkTheMatrix
 from copy import copy, deepcopy
 from math import sqrt
+from heuristics import *
+from readFile import restructureList
 import math
-
-def readFile():
-    with open(sys.argv[1]) as f:
-        content = f.readlines()
-    return content;
-
-def restructureList():
-    fileContent = readFile();
-    newList = [];
-    for i, x in enumerate(fileContent):
-        if i > 1:
-            newList.append([int(n) for n in x.split()]);
-    return newList;
-
-def getPosition(matrix, value):
-    for index, item in enumerate(matrix):
-        newLen = len(item);
-        for index2, item2 in enumerate(item):
-            if item2 == value:
-                return [index, index2];
-
-def calculMisplacedTiles(matrix, finalMatrix, limit):
-    i = 1;
-    k = 0;
-    k, result = (0,) *2;
-    while (i < limit):
-        j = getPosition(matrix, i);
-        h = getPosition(finalMatrix, i);
-        if j != h:
-            k+=1;
-        i+=1;
-    return result;
-
-# def calculNilssonSequence(matrix, finalMatrix, limit):
-
-def calculManathanDistance(matrix, finalMatrix, limit):
-    i = 1;
-    result = 0;
-    while (i < limit):
-        j = getPosition(matrix, i);
-        h = getPosition(finalMatrix, i);
-        result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
-        i+=1;
-    return result;
-
-def horizontalConf(matrix, finalMatrix, j, h, i, linear, workedList):
-    actualLine = deepcopy(matrix[j[0]]);
-    goalLine = deepcopy(finalMatrix[j[0]]);
-    workingList = [];
-    for x in actualLine:
-        if x in goalLine and x != 0:
-            workingList.append(x);
-    if i in workingList:
-        workingList.remove(i);
-        if j != h:
-            for x in workingList:
-                if x in goalLine:
-                    tmpPos = getPosition(matrix, x);
-                    if h[1] <= tmpPos[1] <= j[1]:
-                        # print "++";
-                        linear+=1;
-                    elif j[1] <= tmpPos[1] <= h[1]:
-                        # print "++2";
-                        linear+=1
-    return linear;
-
-def verticalConf(matrix, finalMatrix, j, h, i, linear, workedList):
-    actualLine = [];
-    goalLine = [];
-    d = 0;
-    while d < len(matrix):
-        actualLine.append(matrix[d][j[1]]);
-        goalLine.append(finalMatrix[d][j[1]]);
-        d+=1;
-    d = 0;
-    workingList = [];
-    for x in actualLine:
-        if x in goalLine and x != 0:
-            workingList.append(x);
-    if i in workingList:
-        workingList.remove(i);
-        if j != h:
-            for x in workingList:
-                if x in goalLine:
-                    tmpPos = getPosition(matrix, x);
-                    # print "___";
-                    # print x, i;
-                    # print tmpPos;
-                    # print j;
-                    # print h;
-                    # print "___";
-                    if h[0] <= tmpPos[0] <= j[0]:
-                        # print "++";
-                        linear+=1;
-                    elif j[0] <= tmpPos[0] <= h[0]:
-                        # print "++2";
-                        linear+=1
-    # print i;
-    return linear;
-
-
-def isLinearConflit(matrix, finalMatrix, limit):
-    i = 1;
-    workedList = [];
-    linear = 0;
-    while (i < limit):
-        j = getPosition(matrix, i);
-        h = getPosition(finalMatrix, i);
-        linear = horizontalConf(matrix, finalMatrix, j, h, i, linear, workedList);
-        linear = linear + verticalConf(matrix, finalMatrix, j, h, i, linear, workedList);
-        i+=1;
-    return linear;
-
-# Manathan + Linear distance.
-def calculMandLdistance(matrix, finalMatrix, limit):
-    result = 0;
-    linearConf = 0;
-    i = 1;
-    while (i < limit):
-        j = getPosition(matrix, i);
-        h = getPosition(finalMatrix, i);
-
-        if (abs(j[0] - h[0]) + abs(j[1] - h[1]) != 0):
-            result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
-        i+=1;
-    return result + isLinearConflit(matrix, finalMatrix, limit);
-
+import json
 
 def getZeroPos(matrix):
     return getPosition(matrix, 0);
@@ -190,30 +65,48 @@ def priorityQueue(currList, toAdd):
             return ;
     currList.append(toAdd);
 
-
-
 def allPath(matrix):
     resultList = [];
+    finalList = []
     while matrix.parent is not None:
         resultList.append(matrix.matrix);
         matrix = matrix.parent;
+    resultList.append(matrix.matrix);
     for i in reversed(resultList):
+        nL = [];
         for array in i:
+            nL.append(array);
             print array;
+        finalList.append(nL);
         print '\n';
     print "The program needed " + str(len(resultList)) + " moves to find the solution."
+    # for website
+    # data = {}
+    # data['steps'] = finalList;
+    # data['number_of_moves'] = 3;
+    # data['number_in_openList'] = 8;
+    # json_data = json.dumps(data);
+    # print 'JSON: ', json_data;
+
 def aStar(matrix, finalMatrix, limit):
     closedList = [];
     openList = [];
     matrixInOpen = 1;
     openList.append(node(0, calculMandLdistance(matrix, finalMatrix, limit), matrix, None));
+    sizeOpen = None;
     while (openList is not None):
+        if sizeOpen is None:
+            sizeOpen = len(openList);
+        else:
+            if len(openList) > sizeOpen:
+                sizeOpen = len(openList);
         currentMatrix = openList[0];
         closedList.append(currentMatrix);
         openList.remove(currentMatrix);
         if (currentMatrix.matrix == finalMatrix):
             allPath(currentMatrix);
             print "Number of states been in the open list: " + str(matrixInOpen) + ".";
+            print "Maximum number of states ever represented in memory at the same time: " + str(sizeOpen) + ".";
             return ;
         adjacentMatrix = calculAdjacent(currentMatrix.matrix, finalMatrix, limit);
         for aMatrix in adjacentMatrix:
@@ -234,37 +127,6 @@ class node:
         self.matrix = matrix;
         self.parent = parent;
 
-
-def ida(matrix, finalMatrix, limit):
-    treshold = calculMandLdistance(matrix, finalMatrix, limit);
-    while 1:
-        tmp = search(matrix, 0, treshold, finalMatrix, limit);
-        if tmp.matrix == finalMatrix:
-            print tmp;
-            return ;
-        treshold = tmp.f;
-
-def search(currNode, g, treshold, goal, limit):
-    f = g + calculMandLdistance(matrix, finalMatrix, limit);
-
-    if f > treshold:
-        return f;
-
-    if currNode == goal:
-        print " c en vrai la"
-        return 1;
-    minimum = float("inf");
-    adjacentMatrix = calculAdjacent(currNode, finalMatrix, limit);
-    for m in adjacentMatrix:
-        tmp = search(m, g + 1, treshold, goal, limit);
-        if tmp == 1:
-            print "c la";
-            return 1;
-        if tmp < minimum:
-            minimum = tmp;
-    return minimum;
-
-
 matrix = restructureList();
 nbrOfValue = len(matrix) * len(matrix);
 finalMatrix = finalStateMatrix(matrix);
@@ -272,6 +134,3 @@ if checkTheMatrix(matrix, finalMatrix) == -1:
     print "this N-puzzle is not solvable";
     exit(0);
 aStar(matrix, finalMatrix, nbrOfValue)
-# ida(matrix, finalMatrix, nbrOfValue);
-# testM = [[0,1,2],[7,0,4],[8,6,5]];
-# calculMandLdistance(matrix,finalMatrix,9);
