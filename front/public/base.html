@@ -1,0 +1,107 @@
+<!doctype html>
+<!-- The DOCTYPE declaration above will set the     -->
+<!-- browser's rendering engine into                -->
+<!-- "Standards Mode". Replacing this declaration   -->
+<!-- with a "Quirks Mode" doctype is not supported. -->
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<link type="text/css" rel="stylesheet" href="./style.css">
+
+<title>Sliding puzzle</title>
+
+<script type="text/javascript" language="javascript"
+  src="./slider.js"></script>
+</head>
+
+<body>
+
+  <noscript>
+    <div
+      style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
+      Your web browser must have JavaScript enabled in order for this
+      application to display correctly.</div>
+  </noscript>
+  <div id="content">
+    <div style='float: right'>
+      <div class="g-plusone"></div>
+    </div>
+
+    <h1 style="margin-bottom: 40px;">Sliding puzzle</h1>
+
+
+    <div style="clear: right; width: 100%"></div>
+
+    <div id="timeout">Oops, the search algorithm has not been able to solve the puzzle in 60 seconds. Please try again with a different algorithm or another heuristic function.</div>
+    <div id="error">Oops, something went wrong. Please try again...</div>
+    
+    <div id="right" style="width: 55%; float: right; margin-right: 15px;">
+
+      <div id="choice" style="margin-bottom: 20px;">
+        <form action="#">
+          <table cellpadding="5">
+            <tr>
+              <td colspan='2' align='center' class='header'>Puzzle
+                configuration</td>
+            </tr>
+            <tr>
+              <td class='label'>Puzzle type:</td>
+              <td>
+                3X3
+              </td>
+            </tr>
+            <tr>
+              <td class='label'>Algorithm type:</td>
+              <td><select id="algorithmType"></select><span></span></td>
+            </tr>
+            <tr>
+              <td class='label'>Heuristic type:</td>
+              <td><select id="heuristicType"></select></td>
+            </tr>
+          </table>
+        </form>
+      </div>
+
+      <div>
+        <table cellpadding="5">
+          <tr>
+            <td colspan='2' align='center' class='header'>Results</td>
+          </tr>
+          <tr>
+            <td class='label'># of moves:</td>
+            <td><span id='numberOfMoves'></span></td>
+          </tr>
+          <tr>
+            <td class='label'>Elapsed time:</td>
+            <td><span id='elapsedTime'></span>ms</td>
+          </tr>
+          <tr>
+            <td class='label'>Path:</td>
+            <td><span id='path'></span></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div id="puzzle" class="puzzleTable"
+      style="height: 249px; width: 249px;">
+    </div>
+
+    <div id="actionsBar" style="display: none;">
+      <button id="random">Make it random!</button>
+      <button id="solve">Solve!</button>
+      <button id="play">Play the result!</button>
+    </div>
+
+  </div>
+  <script>
+    initiateSquare([ [1, 2, 3], [6, 5, 8], [4, 7, 0] ])
+    newSquare([ [1, 2, 3], [6, 5, 0], [4, 7, 8] ] )
+  </script>
+
+
+</body>
+</html>
+
