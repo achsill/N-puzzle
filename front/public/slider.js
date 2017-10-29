@@ -1,56 +1,64 @@
 
 function initiateSquare(array){
 	current = array;
-	array.forEach(line => {
-		line.forEach(boxNb => {
+	for (var y = 0; y < array.length; y++)
+	{
+		for (var x = 0; x < array[y].length; x++)
+		{
+			let boxNb = array[y][x];
 			let box = document.createElement("div");
 			if (boxNb !== 0)
 				box.className = "tile";
 			else
 				box.className = "tile empty";
 			box.innerHTML = boxNb;
+			box.style.left = `${x * 82}px`;
+			box.style.top = `${y * 82}px`;
 
 			document
 				.getElementById('puzzle')
 				.appendChild(box);
-		})
-	})
+		}
+	}
 }
 
 function getSwapDir(pos){
+	var swap = {};
 	if (pos.from.x !== pos.to.x)
-		return pos.from.x < pos.to.x ? "swap_right" : "swap_left";
-	else
-		return pos.from.y < pos.to.y ? "swap_down" : "swap_up";
+	{
+		swap.dir = "left";
+		swap.val =  pos.from.x < pos.to.x ? 82 : -82;
+		return swap;
+	} else {
+		swap.dir = "top";
+		swap.val =  pos.from.y < pos.to.y ? 82 : -82;
+		return swap;
+	}
 }
 
 function getOpposedSwapDir(swap){
-	if (swap === "swap_right")
-		return "swap_left";
-	if (swap === "swap_left")
-		return "swap_right";
-	if (swap === "swap_up")
-		return "swap_down";
-	if (swap === "swap_down")
-		return "swap_up";
+	var oppposedSwap = {};
+	oppposedSwap.dir = swap.dir;
+	oppposedSwap.val = -swap.val;
+	return oppposedSwap;
 }
 
 function swapBoxes(change, pos){
 	console.log(`change is at ${change}`);
 	var allBoxes = document.getElementsByClassName("tile");
 	var swap = getSwapDir(pos);
-	var opposedSwap = getOpposedSwapDir(swap);
+	var oppposedSwap = getOpposedSwapDir(swap);
 	for (var i = 0; i < allBoxes.length; i++)
 	{
 		if (allBoxes[i].innerHTML == 0)
 		{
-			allBoxes[i].className = `tile `;//add opposedSwap
-			allBoxes[i].innerHTML = change;
+			let oldValue = parseInt(allBoxes[i].style[swap.dir]);
+			allBoxes[i].style[swap.dir] = `${oldValue + swap.val}px`;
 		}
 		else if (allBoxes[i].innerHTML == change)
 		{
-			allBoxes[i].className = `tile empty ${swap}`;
-			allBoxes[i].innerHTML = 0;
+			let oldValue = parseInt(allBoxes[i].style[oppposedSwap.dir]);
+			allBoxes[i].style[oppposedSwap.dir] = `${oldValue + oppposedSwap.val}px`;
 		}
 	}
 	console.log(`empty is moving ${swap}`);
@@ -88,7 +96,7 @@ function showSteps(steps, i){
 	setTimeout(function () {
 		newSquare(steps[i]);
 		showSteps(steps, i + 1);
-	}, 1000);
+	}, 2000);
 }
 
 
