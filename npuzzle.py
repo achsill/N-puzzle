@@ -48,10 +48,10 @@ def matrixInList(matrixList, matrix):
             return 1;
     return 0;
 
-def alreadyInOpenList(parent, openList, matrix, i, limit):
+def alreadyInOpenList(parent, openList, matrix, i, limit, heuristic):
     for m in openList:
         if (m.matrix == matrix):
-            h = calculMandLdistance(matrix, finalMatrix, limit);
+            h = chooseHeuristic(matrix, finalMatrix, limit, heuristic);
             if (i + h < m.f):
                 m.h = h;
                 m.g = i;
@@ -65,34 +65,40 @@ def priorityQueue(currList, toAdd):
             return ;
     currList.append(toAdd);
 
-def allPath(matrix):
+def allPath(matrix, web, matrixInOpen, sizeOpen):
     resultList = [];
     finalList = []
     while matrix.parent is not None:
         resultList.append(matrix.matrix);
         matrix = matrix.parent;
     resultList.append(matrix.matrix);
-    for i in reversed(resultList):
-        nL = [];
-        for array in i:
-            nL.append(array);
-            print array;
-        finalList.append(nL);
-        print '\n';
-    print "The program needed " + str(len(resultList)) + " moves to find the solution."
-    # for website
-    # data = {}
-    # data['steps'] = finalList;
-    # data['number_of_moves'] = 3;
-    # data['number_in_openList'] = 8;
-    # json_data = json.dumps(data);
-    # print 'JSON: ', json_data;
+    if web == 0:
+        for i in reversed(resultList):
+            for array in i:
+                print array;
+            print '\n';
+        print "The program needed " + str(len(resultList)) + " moves to find the solution."
+        print "Number of states been in the open list: " + str(matrixInOpen) + ".";
+        print "Maximum number of states ever represented in memory at the same time: " + str(sizeOpen) + ".";
+    else:
+        for i in reversed(resultList):
+            nL = [];
+            for array in i:
+                nL.append(array);
+            finalList.append(nL);
+        data = {}
+        data['steps'] = finalList;
+        data['number_of_moves'] = len(resultList);
+        data['number_in_openList'] = matrixInOpen;
+        data['number_of_states'] = sizeOpen;
+        json_data = json.dumps(data);
+        print 'JSON: ', json_data;
 
-def aStar(matrix, finalMatrix, limit):
+def aStar(matrix, finalMatrix, limit, heuristic, web):
     closedList = [];
     openList = [];
     matrixInOpen = 1;
-    openList.append(node(0, calculMandLdistance(matrix, finalMatrix, limit), matrix, None));
+    openList.append(node(0, chooseHeuristic(matrix, finalMatrix, limit, heuristic), matrix, None));
     sizeOpen = None;
     while (openList is not None):
         if sizeOpen is None:
@@ -104,19 +110,17 @@ def aStar(matrix, finalMatrix, limit):
         closedList.append(currentMatrix);
         openList.remove(currentMatrix);
         if (currentMatrix.matrix == finalMatrix):
-            allPath(currentMatrix);
-            print "Number of states been in the open list: " + str(matrixInOpen) + ".";
-            print "Maximum number of states ever represented in memory at the same time: " + str(sizeOpen) + ".";
+            allPath(currentMatrix, web, matrixInOpen, sizeOpen);
             return ;
         adjacentMatrix = calculAdjacent(currentMatrix.matrix, finalMatrix, limit);
         for aMatrix in adjacentMatrix:
             if matrixInList(closedList, aMatrix) == 1:
                 continue;
             if matrixInList(openList, aMatrix) == 0:
-                priorityQueue(openList, (node(currentMatrix.g + 1, calculMandLdistance(aMatrix, finalMatrix, limit), aMatrix, currentMatrix)));
+                priorityQueue(openList, (node(currentMatrix.g + 1, chooseHeuristic(aMatrix, finalMatrix, limit, heuristic), aMatrix, currentMatrix)));
                 matrixInOpen+=1;
             else:
-                alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit);
+                alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit, heuristic);
 
 
 class node:
@@ -127,10 +131,11 @@ class node:
         self.matrix = matrix;
         self.parent = parent;
 
-matrix = restructureList();
+parse = restructureList();
+matrix = parse[0];
 nbrOfValue = len(matrix) * len(matrix);
 finalMatrix = finalStateMatrix(matrix);
 if checkTheMatrix(matrix, finalMatrix) == -1:
     print "this N-puzzle is not solvable";
     exit(0);
-aStar(matrix, finalMatrix, nbrOfValue)
+aStar(matrix, finalMatrix, nbrOfValue, parse[1], parse[2]);

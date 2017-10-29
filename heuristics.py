@@ -1,5 +1,13 @@
 from copy import copy, deepcopy
 
+def chooseHeuristic(matrix, finalMatrix, limit, i):
+    if i == 1:
+        return calculMandLdistance(matrix, finalMatrix, limit);
+    elif i == 2:
+        return calculManathanDistance(matrix, finalMatrix, limit);
+    elif i == 3:
+        return calculMisplacedTiles(matrix, finalMatrix, limit);
+
 def calculMisplacedTiles(matrix, finalMatrix, limit):
     i = 1;
     k = 0;
