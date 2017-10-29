@@ -29,7 +29,7 @@ def restructureList():
         newList = [];
         for i, x in enumerate(fileContent):
             if i > 1:
-                newList.append([int(n) for n in x.split()]);
+                newList.append([int(n) for n in x.split() if n.isdigit()]);
         h = choose_h();
         if args.web:
             w = 1;
