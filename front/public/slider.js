@@ -17,41 +17,67 @@ function initiateSquare(array){
 	})
 }
 
-function swapBoxes(change){
+function getSwapDir(pos){
+	if (pos.from.x !== pos.to.x)
+		return pos.from.x < pos.to.x ? "swap_right" : "swap_left";
+	else
+		return pos.from.y < pos.to.y ? "swap_down" : "swap_up";
+}
+
+function getOpposedSwapDir(swap){
+	if (swap === "swap_right")
+		return "swap_left";
+	if (swap === "swap_left")
+		return "swap_right";
+	if (swap === "swap_up")
+		return "swap_down";
+	if (swap === "swap_down")
+		return "swap_up";
+}
+
+function swapBoxes(change, pos){
 	console.log(`change is at ${change}`);
 	var allBoxes = document.getElementsByClassName("tile");
+	var swap = getSwapDir(pos);
+	var opposedSwap = getOpposedSwapDir(swap);
 	for (var i = 0; i < allBoxes.length; i++)
 	{
 		if (allBoxes[i].innerHTML == 0)
 		{
-			allBoxes[i].className = "tile";
+			allBoxes[i].className = `tile `;//add opposedSwap
 			allBoxes[i].innerHTML = change;
 		}
 		else if (allBoxes[i].innerHTML == change)
 		{
-			allBoxes[i].className = "tile empty";
+			allBoxes[i].className = `tile empty ${swap}`;
 			allBoxes[i].innerHTML = 0;
 		}
 	}
+	console.log(`empty is moving ${swap}`);
 }
 
-function newSquare(array){
+function newSquare(newArray){
 
-	console.log(`this is arr received ${array}`);
-	for (var i = 0; i < 3; i++)
+	var pos = {};
+	console.log(`this is arr received ${newArray}`);
+	for (var y = 0; y < 3; y++)
 	{
-		for (var j = 0; j < 3; j++)
+		for (var x = 0; x < 3; x++)
 		{
-			if (array[i][j] !== current[i][j])
+			if (newArray[y][x] !== current[y][x])
 			{
-				var change = array[i][j] === 0 ?
-					current[i][j] :
-					array[i][j];
+					if (newArray[y][x] === 0) {
+						var change = current[y][x];
+						pos.to = {y, x};
+					} else {
+						var change = newArray[y][x];
+						pos.from = {y, x};
+					}
 			}
 		}
 	}
-	swapBoxes(change);
-	current = array;
+	swapBoxes(change, pos);
+	current = newArray;
 }
 
 function showSteps(steps, i){

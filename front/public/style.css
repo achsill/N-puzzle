@@ -129,3 +129,18 @@ http://itweek.deviantart.com/art/Knob-Buttons-Toolbar-icons-73463960
   background-image: url('/img/warning.png');
 }
 
+.swap_right {
+  transform: translateX(82px);
+}
+
+.swap_left {
+  transform: translateX(-82px);
+}
+
+.swap_down {
+  transform: translateY(82px);
+}
+
+.swap_up {
+  transform: translateY(-82px);
+}
