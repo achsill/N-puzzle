@@ -133,6 +133,9 @@ class node:
 
 parse = restructureList();
 matrix = parse[0];
+if len(matrix) < 3:
+    print "Invalid N-Puzzle in file, please put at least a 8Puzzle."
+    exit(0);
 nbrOfValue = len(matrix) * len(matrix);
 finalMatrix = finalStateMatrix(matrix);
 if checkTheMatrix(matrix, finalMatrix) == -1:

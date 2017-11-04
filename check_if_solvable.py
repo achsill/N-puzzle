@@ -1,29 +1,3 @@
-def listBefore(index, finalList):
-    newList = [];
-    for nbr in finalList:
-        if (nbr == index):
-            return newList;
-        newList.append(nbr);
-
-
-def iterateAll(nbrList, index, finalList):
-    k = 0;
-    beforeNbr = listBefore(index, finalList);
-    result = 0;
-    for nbr in nbrList:
-        if (k == 1 and nbr in beforeNbr):
-            result+=1;
-        if (nbr == index):
-            k = 1;
-    return result;
-
-
-def numberOfSwitches(nbrList, finalList):
-    result = 0;
-    for nbr in nbrList:
-        result = result + iterateAll(nbrList, nbr, finalList);
-    return  result;
-
 def finalList(finalMatrix):
     finalList = []
     for listM in finalMatrix:
@@ -32,28 +6,42 @@ def finalList(finalMatrix):
     finalList.remove(0);
     return finalList;
 
+def numberOfSwitches(matrix, limit):
+    i = 1;
+    k = 0;
+    result = 0;
+    while i < limit:
+        k = 0;
+        for p in matrix:
+            for n in p:
+                if i == n:
+                    k = 1
+                if n < i and k == 1 and n is not 0:
+                    result+=1
+        i+=1;
+    return result;
+
+def getZro(matrix):
+    zeroPos = 0;
+    for i, l in enumerate(reversed(matrix)):
+        if 0 in l:
+            return i + 1;
+    return zeroPos
+
 def checkTheMatrix(matrix, finalMatrix):
     squareMatrix = len(matrix);
     puissanceSquare = squareMatrix*squareMatrix;
-    nbrList = [];
-    for item in matrix:
-        for item2 in item:
-            nbrList.append(item2);
-    nbrList.remove(0);
-    result = numberOfSwitches(nbrList, finalList(finalMatrix));
-    if squareMatrix % 2 == 0:
-        if result % 2 == 0:
+    d = (numberOfSwitches(matrix, puissanceSquare) % 2);
+    h = (numberOfSwitches(finalMatrix, puissanceSquare) % 2);
+    if squareMatrix % 2 is not 0:
+        if d == h:
             return 1;
+        else:
+            return -1;
     else:
-        for i, l in enumerate(matrix):
-            if 0 in l :
-                if i + 1% 2 == 0:
-                    if result % 2 == 0:
-                        return -1;
-                    else:
-                        return 1;
-                else:
-                    if result % 2 == 0:
-                        return 1;
-                    else:
-                        return -1;
+        d = (getZro(matrix) + d) % 2;
+        h = (getZro(finalMatrix) + h) % 2;
+        if d == h:
+            return 1;
+        else:
+            return -1;

@@ -83,7 +83,7 @@ def isLinearConflit(matrix, finalMatrix, limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
         linear = horizontalConf(matrix, finalMatrix, j, h, i, linear, workedList);
-        linear = linear + verticalConf(matrix, finalMatrix, j, h, i, linear, workedList);
+        linear = verticalConf(matrix, finalMatrix, j, h, i, linear, workedList);
         i+=1;
     return linear;
 
@@ -95,7 +95,6 @@ def calculMandLdistance(matrix, finalMatrix, limit):
     while (i < limit):
         j = getPosition(matrix, i);
         h = getPosition(finalMatrix, i);
-
         if (abs(j[0] - h[0]) + abs(j[1] - h[1]) != 0):
             result = result + abs(j[0] - h[0]) + abs(j[1] - h[1]);
         i+=1;
