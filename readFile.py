@@ -2,6 +2,7 @@ import argparse
 import random
 import argparse
 import sys
+import json
 import os.path
 
 parser = argparse.ArgumentParser()
@@ -24,6 +25,7 @@ def choose_h():
 
 def restructureList():
     w = 0;
+
     if (len(args.sourcefile)) == 0:
         return [random.choice(randomMatrix), 1, 0];
     elif (len(args.sourcefile)) == 1:
@@ -33,6 +35,18 @@ def restructureList():
                 newList.append([int(n) for n in x.split() if n.isdigit()]);
         newList = [x for x in newList if x];
         newList = formatMatrix(newList);
+        if args.iweb:
+            finalList = [];
+            for i in (newList):
+                nL = [];
+                for array in i:
+                    nL.append(array);
+                finalList.append(nL);
+            data = {}
+            data['steps'] = finalList;
+            json_data = json.dumps(data);
+            print 'JSON: ', json_data;
+            exit (0);
         h = choose_h();
         if args.web:
             w = 1;
