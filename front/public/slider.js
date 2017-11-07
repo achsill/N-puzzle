@@ -129,7 +129,8 @@ function all(){
 		request.onload = function() {
 		  if (request.status >= 200 && request.status < 400) {
 			var solution = JSON.parse(request.responseText);
-			showSteps(solution.steps, 1);
+			  showSteps(solution.steps, 1);
+        document.getElementById("numberOfMoves").textContent = solution.number_of_moves;
 		  } else {
 			console.log('PB lol', request);
 		  }
