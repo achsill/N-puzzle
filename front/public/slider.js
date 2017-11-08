@@ -122,15 +122,19 @@ function all(){
 	};
 
 	document.getElementById("solve").onclick = () => {
+		var e = document.getElementById("heuristicType");
+		var heuristic = e.options[e.selectedIndex].value;
+		console.log('ready to heur', heuristic);
 
 		var request = new XMLHttpRequest();
-		request.open('GET', '/solve', true);
+		request.open('GET', `/solve?heuristic=${heuristic}`, true);
 		
 		request.onload = function() {
 		  if (request.status >= 200 && request.status < 400) {
 			var solution = JSON.parse(request.responseText);
 			  showSteps(solution.steps, 1);
         document.getElementById("numberOfMoves").textContent = solution.number_of_moves;
+        document.getElementById("complexity").textContent = solution.number_in_openList;
 		  } else {
 			console.log('PB lol', request);
 		  }

@@ -52,12 +52,13 @@
               </td>
             </tr>
             <tr>
-              <td class='label'>Algorithm type:</td>
-              <td><select id="algorithmType"></select><span></span></td>
-            </tr>
-            <tr>
               <td class='label'>Heuristic type:</td>
-              <td><select id="heuristicType"></select></td>
+              <td>
+                <select id="heuristicType">
+                  <option value="mt">  Misplaced tiles </option>
+                  <option value="m">	Manatthan distance  </option>
+                  <option value="ml">	Manatthan + Linear  </option>
+                </select></td>
             </tr>
           </table>
         </form>
@@ -69,12 +70,12 @@
             <td colspan='2' align='center' class='header'>Results</td>
           </tr>
           <tr>
-            <td class='label'># of moves:</td>
+            <td class='label'>Number of moves:</td>
             <td><span id='numberOfMoves'></span></td>
           </tr>
           <tr>
-            <td class='label'>Elapsed time:</td>
-            <td><span id='elapsedTime'></span>ms</td>
+            <td class='label'>Puzzle Complexity:</td>
+            <td><span id='complexity'></span></td>
           </tr>
           <tr>
             <td class='label'>Path:</td>

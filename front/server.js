@@ -14,6 +14,7 @@ app.get('/newSqr', function (req, res) {
 })
 
 app.get('/solve', function (req, res) {
+	console.log('recevied', req.query.heuristic);
 	//sera du POST car conf de resolution a passer
 	//doit launch solve .py avec newSqr.json en param
 	// -> genere un solved .json -> renvoie
