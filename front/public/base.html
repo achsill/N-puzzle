@@ -52,12 +52,18 @@
               </td>
             </tr>
             <tr>
+              <td class='label'>Speed </td>
+              <td>
+                <input id="speed" type="number" step="0.01" value="2">
+              </td>
+            </tr>
+            <tr>
               <td class='label'>Heuristic type:</td>
               <td>
                 <select id="heuristicType">
-                  <option value="mt">  Misplaced tiles </option>
-                  <option value="m">	Manatthan distance  </option>
                   <option value="ml">	Manatthan + Linear  </option>
+                  <option value="m">	Manatthan distance  </option>
+                  <option value="mt">  Misplaced tiles </option>
                 </select></td>
             </tr>
           </table>
@@ -78,8 +84,8 @@
             <td><span id='complexity'></span></td>
           </tr>
           <tr>
-            <td class='label'>Path:</td>
-            <td><span id='path'></span></td>
+            <td class='label'>Number of states::</td>
+            <td><span id='nbStates'></span></td>
           </tr>
         </table>
       </div>
@@ -95,6 +101,9 @@
 
   </div>
   <script>
+    document.getElementById('speed').addEventListener('change', (el) => {
+      document.getElementById('speed').setAttribute("value", el.target.valueAsNumber.toString());
+    });
     ready(all);
   </script>
 

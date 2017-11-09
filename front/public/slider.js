@@ -96,12 +96,18 @@ function showSteps(steps, i){
 	setTimeout(function () {
 		newSquare(steps[i]);
 		showSteps(steps, i + 1);
-	}, 2000);
+	}, document.getElementById('speed').value * 1000);
 }
 
 
+function clear(){
+	var myNode = document.getElementById("puzzle");
+	myNode.innerHTML = '';
+}
+
 function all(){
 	document.getElementById("generate").onclick = () => {
+		clear();
 
 		var request = new XMLHttpRequest();
 		request.open('GET', '/newSqr', true);
@@ -109,7 +115,7 @@ function all(){
 		request.onload = function() {
 		  if (request.status >= 200 && request.status < 400) {
 			var newSqr = JSON.parse(request.responseText);
-			initiateSquare(newSqr.sqr);
+			initiateSquare(newSqr.steps);
 		  } else {
 			console.log('PB lol', request);
 		  }
@@ -122,6 +128,7 @@ function all(){
 	};
 
 	document.getElementById("solve").onclick = () => {
+		//clear();
 		var e = document.getElementById("heuristicType");
 		var heuristic = e.options[e.selectedIndex].value;
 		console.log('ready to heur', heuristic);
@@ -135,6 +142,7 @@ function all(){
 			  showSteps(solution.steps, 1);
         document.getElementById("numberOfMoves").textContent = solution.number_of_moves;
         document.getElementById("complexity").textContent = solution.number_in_openList;
+        document.getElementById("nbStates").textContent = solution.number_of_states;
 		  } else {
 			console.log('PB lol', request);
 		  }

@@ -11,13 +11,15 @@ app.get('/', function (req, res) {
 })
 
 app.get('/newSqr', function (req, res) {
-  fs.unlinkSync("./front/newSqr.txt");
-  fs.unlinkSync("./front/newSqr.json");
+	if (fs.existsSync("./front/newSqr.txt"))
+ 		fs.unlinkSync("./front/newSqr.txt");
+	if (fs.existsSync("./front/newSqr.json"))
+ 		fs.unlinkSync("./front/newSqr.json");
   //doit launch generate .py
   const process = spawn('python',["./puzzle_gen.py", "-s", "3"]);
   process.on('close', () => {
 
-    const process2 = spawn('python',["./npuzzle.py", "-iw"]);
+    const process2 = spawn('python',["./npuzzle.py", "-iw", "./front/newSqr.txt"]);
     process2.on('close', () => {
       res.sendFile(path.join(__dirname + '/front/newSqr.json'));
     })
@@ -53,11 +55,15 @@ app.get('/solve', function (req, res) {
   let heur = req.query.heuristic;
   if (heur === "m" || heur === "ml" || heur === "mt")
   {
-    const process = spawn('python',["./npuzzle.py", "./front/newSqr.json", `-w`, `-${heur}`]);
+	  console.log('coucocu');
+	if (fs.existsSync("./front/solved.json"))
+  		fs.unlinkSync("./front/solved.json");
+    const process = spawn('python', ["./npuzzle.py", `-w`, `-${heur}`, "./front/newSqr.txt"]);
 
     process.stdout.on('data',function(chunk){
 
       var textChunk = chunk.toString('utf8');// buffer to string
+		console.log('data received ----', textChunk);
       fs.appendFile("./front/solved.json", textChunk, function(err) {
         if(err) {
           return console.log(err);
