@@ -77,7 +77,7 @@ def allPath(matrix, web, matrixInOpen, sizeOpen):
             for array in i:
                 print array;
             print '\n';
-        print "The program needed " + str(len(resultList)) + " moves to find the solution."
+        print "The program needed " + str(len(resultList) - 1) + " moves to find the solution."
         print "Number of states been in the open list: " + str(matrixInOpen) + ".";
         print "Maximum number of states ever represented in memory at the same time: " + str(sizeOpen) + ".";
     else:
@@ -92,26 +92,26 @@ def allPath(matrix, web, matrixInOpen, sizeOpen):
         data['number_in_openList'] = matrixInOpen;
         data['number_of_states'] = sizeOpen;
         json_data = json.dumps(data);
-        print 'JSON: ', json_data;
+        print json_data;
 
 def aStar(matrix, finalMatrix, limit, heuristic, web):
     closedList = [];
     openList = [];
-    matrixInOpen = 1;
+    matrixInOpen = 0;
     openList.append(node(0, chooseHeuristic(matrix, finalMatrix, limit, heuristic), matrix, None));
-    sizeOpen = None;
+    sizeOpen = 0;
     while (openList is not None):
-        if sizeOpen is None:
-            sizeOpen = len(openList);
-        else:
-            if len(openList) > sizeOpen:
-                sizeOpen = len(openList);
         currentMatrix = openList[0];
         closedList.append(currentMatrix);
         openList.remove(currentMatrix);
         if (currentMatrix.matrix == finalMatrix):
             allPath(currentMatrix, web, matrixInOpen, sizeOpen);
             return ;
+        if sizeOpen is 0:
+            sizeOpen = len(openList);
+        else:
+            if len(openList) > sizeOpen:
+                sizeOpen = len(openList);
         adjacentMatrix = calculAdjacent(currentMatrix.matrix, finalMatrix, limit);
         for aMatrix in adjacentMatrix:
             if matrixInList(closedList, aMatrix) == 1:

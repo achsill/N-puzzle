@@ -35,6 +35,9 @@ def restructureList():
                 newList.append([int(n) for n in x.split() if n.isdigit()]);
         newList = [x for x in newList if x];
         newList = formatMatrix(newList);
+        if checkNumbers(newList) == 0:
+            print "Errors: Check puzzle numbers";
+            exit(0);
         if args.iweb:
             finalList = [];
             for i in (newList):
@@ -45,7 +48,7 @@ def restructureList():
             data = {}
             data['steps'] = finalList;
             json_data = json.dumps(data);
-            print 'JSON: ', json_data;
+            print json_data;
             exit (0);
         h = choose_h();
         if args.web:
@@ -81,6 +84,19 @@ def formatMatrix(matrix):
             toDel.append(i);
     result = [i for j, i in enumerate(matrix) if j not in toDel]
     return result;
+
+def checkNumbers(matrix):
+    l = [];
+    l.extend(range(0, (len(matrix) * len(matrix))));
+    final = []
+    for m in matrix:
+        for x in m:
+            if x in l:
+                final.append(x);
+    if sum(final) == sum(l) and len(final) == len(l):
+        return 1;
+    return 0;
+
 
 randomMatrix = [
 [[1,6,5],[2,7,4],[0,8,3]],
