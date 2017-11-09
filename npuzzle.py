@@ -107,17 +107,17 @@ def aStar(matrix, finalMatrix, limit, heuristic, web):
         if (currentMatrix.matrix == finalMatrix):
             allPath(currentMatrix, web, matrixInOpen, sizeOpen);
             return ;
-        if sizeOpen is 0:
-            sizeOpen = len(openList);
-        else:
-            if len(openList) > sizeOpen:
-                sizeOpen = len(openList);
         adjacentMatrix = calculAdjacent(currentMatrix.matrix, finalMatrix, limit);
         for aMatrix in adjacentMatrix:
             if matrixInList(closedList, aMatrix) == 1:
                 continue;
             if matrixInList(openList, aMatrix) == 0:
                 priorityQueue(openList, (node(currentMatrix.g + 1, chooseHeuristic(aMatrix, finalMatrix, limit, heuristic), aMatrix, currentMatrix)));
+                if sizeOpen == 0:
+                    sizeOpen = len(openList);
+                else:
+                    if len(openList) > sizeOpen:
+                        sizeOpen = len(openList);
                 matrixInOpen+=1;
             else:
                 alreadyInOpenList(currentMatrix, openList, aMatrix, currentMatrix.g + 1, limit, heuristic);
